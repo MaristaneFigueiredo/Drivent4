@@ -59,33 +59,49 @@ async function setTicketAsPaid(ticketId: number) {
   return await ticketRepository.setTicketAsPaid(ticketId);
 }
 
+// async function checkTiketsByUser(enrollmentId: number) {
+
+//   const dataTicket = await ticketRepository.getTiketsByUser(enrollmentId);
+
+//   //console.log('ticketService dataTicketPaymentUser', dataTicket);
+
+//   //não existe dados do ticket
+//   if (!dataTicket.ticketTypeId) {
+//     throw notFoundError
+//   }
+
+//   const isTicketPaidNotRemoteAndHotelIncluded =
+//     dataTicket.status === TicketStatus.PAID &&
+//     dataTicket.TicketType.isRemote === false &&
+//     dataTicket.TicketType.includesHotel;
+
+//   if (!isTicketPaidNotRemoteAndHotelIncluded) {
+//     throw paymentNotFound;
+//   }
+
+//   return dataTicket;
+// }
+
 async function checkTiketsByUser(enrollmentId: number) {
-  
-  
-  const dataTicket = await ticketRepository.getTiketsByUser(enrollmentId);
+  const ticket = await ticketRepository.getTiketsByUser(enrollmentId);
 
-  //console.log('ticketService dataTicketPaymentUser', dataTicket);
-
+  // existe ticket with enrollment
+  if (!ticket) throw notFoundError;
 
   //não existe dados do ticket
-  if (!dataTicket.ticketTypeId) {    
-    throw notFoundError
+  if (!ticket.ticketTypeId) {
+    throw notFoundError;
   }
-  
 
   const isTicketPaidNotRemoteAndHotelIncluded =
-    dataTicket.status === TicketStatus.PAID &&
-    dataTicket.TicketType.isRemote === false &&
-    dataTicket.TicketType.includesHotel;
+    ticket.status === TicketStatus.PAID && ticket.TicketType.isRemote === false && ticket.TicketType.includesHotel;
 
-  if (!isTicketPaidNotRemoteAndHotelIncluded) {    
+  if (!isTicketPaidNotRemoteAndHotelIncluded) {
     throw paymentNotFound;
   }
 
-  return dataTicket;
+  return ticket;
 }
-
-
 
 const ticketsService = {
   getTicketsType,
@@ -94,8 +110,7 @@ const ticketsService = {
   findTicket,
   getTicketType,
   setTicketAsPaid,
-  checkTiketsByUser
-
+  checkTiketsByUser,
 };
 
 export default ticketsService;
