@@ -1,11 +1,8 @@
 import { prisma } from '@/config';
+import { Booking } from '@prisma/client';
+import { BookingInput } from '@/protocols';
 
-type BookingInput = {
-  userId: number,
-  roomId: number
-};
-
-async function getCountBookingRoom(roomId: number) {
+async function getCountBookingRoom(roomId: number): Promise<number> {
   return await prisma.booking.count({
     where: {
       roomId,
@@ -13,11 +10,12 @@ async function getCountBookingRoom(roomId: number) {
   });
 }
 
-
-//async function createBooking(userId: number, roomId: number) {
-async function createBooking(data:BookingInput) {
+async function createBooking({ userId, roomId }: BookingInput) {
   return await prisma.booking.create({
-    data
+    data: {
+      userId,
+      roomId,
+    },
   });
 }
 

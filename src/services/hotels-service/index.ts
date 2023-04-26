@@ -40,20 +40,6 @@ async function getRoomsHotel(userId: number, hotelId: number) {
   return roomsHotels;
 }
 
-// export async function checkEnrollmentAndDataTicketByUser(userId: number) {
-
-//   // existe enrollment
-//   const enrollment = await enrollmentsService.getEnrollmentByUserId(userId);
-
-//   // existe ticket with enrollment
-//   const ticket = await ticketRepository.getTiketsByUser(enrollment.id);
-
-//   if (!ticket) throw notFoundError;
-
-//   const dataTicket = await ticketsService.checkTiketsByUser(enrollment.id);
-
-// }
-
 export async function checkEnrollmentAndDataTicketByUser(userId: number) {
   // existe enrollment
   const enrollment = await enrollmentsService.getEnrollmentByUserId(userId);

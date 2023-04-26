@@ -1,5 +1,5 @@
 import { prisma } from '@/config';
-import { Hotel } from '@prisma/client';
+import { Hotel, Room } from '@prisma/client';
 
 async function getHotels(): Promise<Hotel[]> {
   const hotels = await prisma.hotel.findMany();
@@ -19,7 +19,7 @@ async function getRoomsHotel(hotelId: number) {
 }
 //
 
-async function getHotelById(hotelId: number) {
+async function getHotelById(hotelId: number): Promise<Hotel> {
   const hotel = await prisma.hotel.findFirst({
     where: {
       id: hotelId,
@@ -28,7 +28,7 @@ async function getHotelById(hotelId: number) {
   return hotel;
 }
 
-async function getRoomById(roomId: number) {
+async function getRoomById(roomId: number): Promise<Room> {
   const room = await prisma.room.findFirst({
     where: {
       id: roomId,

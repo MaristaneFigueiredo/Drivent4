@@ -1,4 +1,4 @@
-import { TicketStatus, Ticket, Payment } from '@prisma/client';
+import { TicketStatus, Ticket, Booking, Payment } from '@prisma/client';
 
 export type ApplicationError = {
   name: string;
@@ -51,14 +51,15 @@ export type TicketResponse = {
   };
 };
 
+export type PaymentInput = {
+  ticketId: number;
+  cardData: {
+    issuer: string;
+    number: number;
+    name: string;
+    expirationDate: Date;
+    cvv: number;
+  };
+};
 
-export type PaymentInput = {  
-  ticketId:number,
-  cardData:{    
-    issuer: string,
-    number: number,
-    name: string,
-    expirationDate: Date,
-    cvv: number    
-  }
-}
+export type BookingInput = Pick<Booking, 'userId' | 'roomId'>;
