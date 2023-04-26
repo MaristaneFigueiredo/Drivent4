@@ -32,7 +32,7 @@ async function createBooking(req: AuthenticatedRequest, res: Response) {
   try {
     const booking = await bookingsService.createBooking(userId, roomId);
 
-    return res.status(httpStatus.OK).send(booking);
+    return res.status(httpStatus.OK).send(booking.id);
   } catch (error) {
     switch (error.name) {
       case 'notFoundError':

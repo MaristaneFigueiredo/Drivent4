@@ -8,4 +8,14 @@ async function getCountBookingRoom(roomId: number) {
   });
 }
 
-export default { getCountBookingRoom };
+
+async function createBooking(userId: number, roomId: number) {
+  return await prisma.booking.create({
+    data: {
+      userId,
+      roomId,
+    },
+  });
+}
+
+export default { getCountBookingRoom, createBooking };

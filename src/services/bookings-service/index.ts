@@ -14,6 +14,9 @@ async function createBooking(userId: number, roomId: number) {
 
   //apenas usuário com ingresso do tipo presencial, com hospedagem e pago
   await hotelsService.checkEnrollmentAndDataTicketByUser(userId);
+
+  return await bookingRepository.createBooking(userId, roomId);
+
 }
 
 async function getRoomById(roomId: number) {
