@@ -31,9 +31,10 @@ async function createBooking(req: AuthenticatedRequest, res: Response) {
 
   try {
     const booking = await bookingsService.createBooking(userId, roomId);
-
+    console.log('controller booking.id', booking.id) 
     return res.status(httpStatus.OK).send(booking.id);
   } catch (error) {
+    console.log('controller error', error) 
     switch (error.name) {
       case 'notFoundError':
         return res.sendStatus(httpStatus.NOT_FOUND);

@@ -1,5 +1,10 @@
 import { prisma } from '@/config';
 
+type BookingInput = {
+  userId: number,
+  roomId: number
+};
+
 async function getCountBookingRoom(roomId: number) {
   return await prisma.booking.count({
     where: {
@@ -9,12 +14,10 @@ async function getCountBookingRoom(roomId: number) {
 }
 
 
-async function createBooking(userId: number, roomId: number) {
+//async function createBooking(userId: number, roomId: number) {
+async function createBooking(data:BookingInput) {
   return await prisma.booking.create({
-    data: {
-      userId,
-      roomId,
-    },
+    data
   });
 }
 

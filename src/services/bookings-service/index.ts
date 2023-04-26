@@ -6,7 +6,8 @@ import hotelRepository from '@/repositories/hotel-repository';
 async function getBooking() {}
 
 async function createBooking(userId: number, roomId: number) {
-  //existe quarto e vaga
+  
+  //existe quarto
   const room = await getRoomById(roomId);
 
   // existe vaga no quarto
@@ -15,7 +16,7 @@ async function createBooking(userId: number, roomId: number) {
   //apenas usuário com ingresso do tipo presencial, com hospedagem e pago
   await hotelsService.checkEnrollmentAndDataTicketByUser(userId);
 
-  return await bookingRepository.createBooking(userId, roomId);
+  return await bookingRepository.createBooking({userId, roomId});
 
 }
 
