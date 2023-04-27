@@ -63,3 +63,5 @@ export type PaymentInput = {
 };
 
 export type BookingInput = Pick<Booking, 'userId' | 'roomId'>;
+
+export type BookingResponse = Pick<Booking, 'id' | 'roomId'>;

@@ -9,7 +9,14 @@ import ticketsService from '@/services/tickets-service';
 
 export type BookingBodyInput = Pick<BookingInput, 'roomId'>;
 
-async function getBooking() {}
+async function getBooking(userId: number) {
+  const booking = await bookingRepository.getBooking(userId);
+
+  if (!booking) {
+    throw notFoundError;
+  }
+  return booking;
+}
 
 async function createBooking({ userId, roomId }: BookingInput) {
   //validar dados do ticket do usuário

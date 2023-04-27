@@ -33,7 +33,30 @@ beforeEach(async () => {
   await cleanDb();
 });
 
-describe('GET /booking', () => {});
+describe('GET /booking', () => {
+  it('should return with status 401 WHEN no token is given', async () => {
+    const response = await server.get('/booking');
+
+    expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+  });
+
+  it('should return with status 401 WHEN given token is not valid', async () => {
+    const token = faker.lorem.word();
+
+    const response = await server.get('/booking').set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+  });
+
+  it('should return with status 401 WHEN there is no session for given token', async () => {
+    const userWithoutSession = await createUser();
+    const token = jwt.sign({ userId: userWithoutSession.id }, process.env.JWT_SECRET);
+
+    const response = await server.get('/booking').set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+  });
+});
 
 describe('POST /booking', () => {
   it('should return with status 401 WHEN no token is given', async () => {
@@ -171,6 +194,12 @@ describe('POST /booking', () => {
       expect(insertedBooking.id).toBe(Number(response.text));
       expect(insertedBooking.userId).toBe(user.id);
       expect(insertedBooking.roomId).toBe(room.id);
+
+      // expect(Number(response.text)).toEqual(
+      //   expect.objectContaining({
+      //     bookingId: expect.any(Number),
+      //   }),
+      // );
     });
   });
 });

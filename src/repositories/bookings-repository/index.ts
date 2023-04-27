@@ -19,4 +19,16 @@ async function createBooking({ userId, roomId }: BookingInput) {
   });
 }
 
-export default { getCountBookingRoom, createBooking };
+async function getBooking(userId: number) {
+  return await prisma.booking.findFirst({
+    where: {
+      userId,
+    },
+    select: {
+      id: true,
+      Room: true,
+    },
+  });
+}
+
+export default { getCountBookingRoom, createBooking, getBooking };
