@@ -6,6 +6,7 @@ export async function createRoom(hotelId: number) {
     data: {
       name: faker.name.findName(),
       capacity: faker.datatype.number(),
+      //capacity: Number(faker.random.numeric(1)),
       hotelId: hotelId,
     },
   });

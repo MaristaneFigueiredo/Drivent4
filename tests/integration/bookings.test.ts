@@ -1,6 +1,7 @@
 import supertest from 'supertest';
 import httpStatus from 'http-status';
 import faker from '@faker-js/faker';
+import { prisma } from '@/config';
 import { TicketStatus } from '@prisma/client';
 import * as jwt from 'jsonwebtoken';
 import app, { init } from '@/app';
@@ -35,13 +36,13 @@ beforeEach(async () => {
 describe('GET /booking', () => {});
 
 describe('POST /booking', () => {
-  it('should respond with status 401 WHEN no token is given', async () => {
+  it('should return with status 401 WHEN no token is given', async () => {
     const response = await server.post('/booking');
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 
-  it('should respond with status 401 WHEN given token is not valid', async () => {
+  it('should return with status 401 WHEN given token is not valid', async () => {
     const token = faker.lorem.word();
 
     const response = await server.post('/booking').set('Authorization', `Bearer ${token}`);
@@ -49,7 +50,7 @@ describe('POST /booking', () => {
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 
-  it('should respond with status 401 WHEN there is no session for given token', async () => {
+  it('should return with status 401 WHEN there is no session for given token', async () => {
     const userWithoutSession = await createUser();
     const token = jwt.sign({ userId: userWithoutSession.id }, process.env.JWT_SECRET);
 
@@ -66,8 +67,13 @@ describe('POST /booking', () => {
       const enrollment = await createEnrollmentWithAddress(user);
       const ticketType = await createTicketType();
       await createTicket(enrollment.id, ticketType.id, TicketStatus.RESERVED);
+      const hotelCreated = await createHotels();
+      const roomCreated = await createRoom(hotelCreated.id);
+      const roomId = roomCreated.id;
+      const body = { roomId };
 
-      const response = await server.post('/booking').set('Authorization', `Bearer ${token}`).send({ roomId: 1 });
+      const response = await server.post('/booking').set('Authorization', `Bearer ${token}`).send(body);
+      //const response = await server.post('/booking').set('Authorization', `Bearer ${token}`).send({ roomId: 1 });
       expect(response.status).toEqual(httpStatus.FORBIDDEN);
     });
 
@@ -81,7 +87,13 @@ describe('POST /booking', () => {
       await createTicket(enrollment.id, ticketType.id, TicketStatus.RESERVED);
       await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
 
-      const response = await server.post('/booking').set('Authorization', `Bearer ${token}`).send({ roomId: 1 });
+      const hotelCreated = await createHotels();
+      const roomCreated = await createRoom(hotelCreated.id);
+      const roomId = roomCreated.id;
+      const body = { roomId };
+
+      //const response = await server.post('/booking').set('Authorization', `Bearer ${token}`).send({ roomId: 1 });
+      const response = await server.post('/booking').set('Authorization', `Bearer ${token}`).send(body);
       expect(response.status).toEqual(httpStatus.FORBIDDEN);
     });
 
@@ -99,7 +111,7 @@ describe('POST /booking', () => {
       expect(response.status).toEqual(httpStatus.FORBIDDEN);
     });
 
-    it("should return with status 404 WHEN room dosen't exist", async () => {
+    it('should return with status 404 WHEN room does not exist', async () => {
       const user = await createUser();
       const token = await generateValidToken(user);
 
@@ -130,26 +142,36 @@ describe('POST /booking', () => {
       expect(response.status).toEqual(httpStatus.FORBIDDEN);
     });
 
-    // it('should return booking with status 200', async () => {
-    //   const user = await createUser();
-    //   const token = await generateValidToken(user);
+    it('should return booking with status 200', async () => {
+      const user = await createUser();
+      const token = await generateValidToken(user);
 
-    //   const enrollment = await createEnrollmentWithAddress(user);
-    //   const ticketType = await createIncludedHotelTicketType();
-    //   const ticket = await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
+      const enrollment = await createEnrollmentWithAddress(user);
+      const ticketType = await createIncludedHotelTicketType();
+      const ticket = await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
 
-    //   const hotel = await createHotels();
-    //   const room = await createRoom(hotel.id);
+      const hotel = await createHotels();
+      const room = await createRoom(hotel.id);
 
-    //   const data = {
-    //     userId: user.id,
-    //     roomId: room.id,
-    //   };
+      const data = {
+        userId: user.id,
+        roomId: room.id,
+      };
 
-    //   const response = await server.post('/booking').set('Authorization', `Bearer ${token}`).send({ roomId: room.id });
-    //   expect(response.status).toEqual(httpStatus.OK);
-    //   expect(Number(response.text)).toEqual(expect.any(Number));
-    // });
+      const response = await server.post('/booking').set('Authorization', `Bearer ${token}`).send({ roomId: room.id });
+      expect(response.status).toEqual(httpStatus.OK);
+
+      //tratando o efeito colateral
+      const insertedBooking = await prisma.booking.findFirst({
+        where: {
+          userId: user.id,
+          roomId: room.id,
+        },
+      });
+      expect(insertedBooking.id).toBe(Number(response.text));
+      expect(insertedBooking.userId).toBe(user.id);
+      expect(insertedBooking.roomId).toBe(room.id);
+    });
   });
 });
 

@@ -7,6 +7,8 @@ import { Room } from '@prisma/client';
 import { check } from 'prettier';
 import ticketsService from '@/services/tickets-service';
 
+export type BookingBodyInput = Pick<BookingInput, 'roomId'>;
+
 async function getBooking() {}
 
 async function createBooking({ userId, roomId }: BookingInput) {
