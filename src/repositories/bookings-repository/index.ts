@@ -37,4 +37,33 @@ async function getBooking(userId: number) {
   });
 }
 
-export default { getCountBookingRoom, createBooking, getBooking };
+async function getBookingById(bookingId: number) {
+  return await prisma.booking.findUnique({
+    where: {
+      id: bookingId,
+    },
+  });
+}
+
+async function getNumberOfRoomBooking(roomId: number) {
+  return await prisma.booking.count({
+    where: {
+      roomId,
+    },
+  });
+}
+
+
+async function changeBooking(bookingId: number, roomId: number) {
+  return await prisma.booking.update({
+    where: {
+      id: bookingId,
+    },
+    data: {
+      roomId,
+    },
+  });
+}
+
+
+export default { getCountBookingRoom, createBooking, getBooking, getBookingById,getNumberOfRoomBooking, changeBooking };
