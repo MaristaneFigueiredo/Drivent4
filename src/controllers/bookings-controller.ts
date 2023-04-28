@@ -33,11 +33,13 @@ async function createBooking(req: AuthenticatedRequest, res: Response) {
   const roomId = Number(req.body.roomId);
 
   try {
-    const booking = await bookingsService.createBooking({ userId, roomId });
+    /* const booking = await bookingsService.createBooking({ userId, roomId });
     const bookingId = booking.id.toString();
-    return res.status(httpStatus.OK).send(bookingId);
-    // return res.status(httpStatus.OK).send(booking.id);
-    // return res.status(httpStatus.OK).send({ bookingId: booking.id });
+    return res.status(httpStatus.OK).send(bookingId); */
+
+    const booking = await bookingsService.createBooking( userId, roomId );    
+    return res.status(httpStatus.OK).send({ bookingId: booking.id });
+   
   } catch (error) {
     //console.log('controller error', error);
     switch (error.name) {

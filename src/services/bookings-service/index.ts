@@ -3,7 +3,7 @@ import hotelsService, { checkEnrollmentAndDataTicketByUser } from '@/services/ho
 import bookingRepository from '@/repositories/bookings-repository';
 import hotelRepository from '@/repositories/hotel-repository';
 import { BookingInput } from '@/protocols';
-import { Room } from '@prisma/client';
+import { Room, Booking } from '@prisma/client';
 import { check } from 'prettier';
 import ticketsService from '@/services/tickets-service';
 
@@ -18,7 +18,8 @@ async function getBooking(userId: number) {
   return booking;
 }
 
-async function createBooking({ userId, roomId }: BookingInput) {
+//async function createBooking({ userId, roomId }: BookingInput) {
+  async function createBooking(userId: number, roomId: number): Promise<Booking> {
   //validar dados do ticket do usuário
   await ticketsService.checkTicket(userId);
 

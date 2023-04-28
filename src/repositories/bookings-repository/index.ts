@@ -10,12 +10,18 @@ async function getCountBookingRoom(roomId: number): Promise<number> {
   });
 }
 
-async function createBooking({ userId, roomId }: BookingInput) {
+/* async function createBooking({ userId, roomId }: BookingInput) {
   return await prisma.booking.create({
     data: {
       userId,
       roomId,
     },
+  });
+} */
+
+async function createBooking(body: BookingInput) {
+  return await prisma.booking.create({
+    data: body
   });
 }
 

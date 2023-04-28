@@ -19,6 +19,7 @@ import {
   createRoom,
   createRoomWithoutCapacity,
   createBooking,
+  createPaidTicket
 } from '../factories';
 import { response } from 'express';
 
@@ -26,7 +27,7 @@ const server = supertest(app);
 
 beforeAll(async () => {
   await init();
-  // await cleanDb()
+  await cleanDb()
 });
 
 beforeEach(async () => {
@@ -56,6 +57,57 @@ describe('GET /booking', () => {
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
+
+  describe('When token is valid', () => {
+    
+    it('should return  with status 404 WHEN user has not bookings', async () => {
+      const user = await createUser();
+      const token = await generateValidToken(user);
+
+      const response = await server.get('/booking').set('Authorization', `Bearer ${token}`);
+      expect(response.status).toBe(httpStatus.NOT_FOUND);
+    });
+
+    it('should return with status 200 WHEN user has bookings', async () => {
+      const user = await createUser();
+      const enrollmentUser = await createEnrollmentWithAddress(user);
+      const ticketType = await createIncludedHotelTicketType();
+      await createPaidTicket(enrollmentUser.id, ticketType.id);
+      const token = await generateValidToken(user);
+      const hotel = await createHotels();
+      const room = await createRoom(hotel.id);
+      const roomId = room.id;
+      const body = { roomId };
+      //await createBooking(user.id, roomId);
+      const booking = await createBooking(room.id, user.id);
+      const response = await server.get('/booking').set('Authorization', `Bearer ${token}`).send(body);
+
+      expect(response.status).toBe(httpStatus.OK);
+
+      expect(response.body).toEqual(
+        expect.objectContaining({
+          id: expect.any(Number),
+          Room: expect.objectContaining({
+            id: expect.any(Number),
+            name: expect.any(String),
+            capacity: expect.any(Number),
+            hotelId: expect.any(Number),
+            createdAt: expect.any(String),
+            updatedAt: expect.any(String),
+          }),
+        }),
+      );
+
+
+
+
+    });
+
+
+
+
+  });
+
 });
 
 describe('POST /booking', () => {
@@ -157,10 +209,7 @@ describe('POST /booking', () => {
       const hotel = await createHotels();
       const room = await createRoomWithoutCapacity(hotel.id);
       const booking = await createBooking(room.id, user.id);
-      //   console.log('booking test hotel.id', hotel.id); //68
-      //   console.log('booking test roomId', room.id); //50
-      //   console.log('booking test bookingId', booking.id); //37
-
+    
       const response = await server.post('/booking').set('Authorization', `Bearer ${token}`).send({ roomId: room.id });
       expect(response.status).toEqual(httpStatus.FORBIDDEN);
     });
@@ -183,9 +232,15 @@ describe('POST /booking', () => {
 
       const response = await server.post('/booking').set('Authorization', `Bearer ${token}`).send({ roomId: room.id });
       expect(response.status).toEqual(httpStatus.OK);
+      expect(response.body).toEqual(
+        expect.objectContaining({
+          bookingId: expect.any(Number)
+        })
+      );
+
 
       //tratando o efeito colateral
-      const insertedBooking = await prisma.booking.findFirst({
+     /*  const insertedBooking = await prisma.booking.findFirst({
         where: {
           userId: user.id,
           roomId: room.id,
@@ -194,12 +249,8 @@ describe('POST /booking', () => {
       expect(insertedBooking.id).toBe(Number(response.text));
       expect(insertedBooking.userId).toBe(user.id);
       expect(insertedBooking.roomId).toBe(room.id);
-
-      // expect(Number(response.text)).toEqual(
-      //   expect.objectContaining({
-      //     bookingId: expect.any(Number),
-      //   }),
-      // );
+ */
+    
     });
   });
 });

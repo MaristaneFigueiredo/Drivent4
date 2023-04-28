@@ -23,6 +23,16 @@ export async function createTicket(enrollmentId: number, ticketTypeId: number, s
   });
 }
 
+export async function createPaidTicket(enrollmentId: number, ticketTypeId: number) {
+  return prisma.ticket.create({
+    data: {
+      enrollmentId,
+      ticketTypeId,
+      status: TicketStatus.PAID,
+    },
+  });
+}
+
 export async function createRemoteTicketType() {
   return prisma.ticketType.create({
     data: {
