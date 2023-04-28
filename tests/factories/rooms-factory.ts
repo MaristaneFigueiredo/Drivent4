@@ -21,3 +21,7 @@ export async function createRoomWithoutCapacity(hotelId: number) {
     },
   });
 }
+
+export function createRoomId() {
+  return faker.datatype.number();
+}
