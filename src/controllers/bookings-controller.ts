@@ -31,8 +31,10 @@ export async function getBooking(req: AuthenticatedRequest, res: Response) {
     return res.status(httpStatus.OK).send(booking);
   } catch (error) {
     switch (error.name) {
-      case 'Forbidden':
-        return res.sendStatus(httpStatus.FORBIDDEN);
+      // case 'Forbidden':
+      //   return res.sendStatus(httpStatus.FORBIDDEN);
+      case 'notFoundError':
+        return res.sendStatus(httpStatus.NOT_FOUND);
       default:
         return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
     }

@@ -21,7 +21,7 @@ async function getBooking(userId: number) {
   const booking = await bookingRepository.getBooking(userId);
 
   if (!booking) {
-    throw Forbidden;
+    throw notFoundError;
   }
   return booking;
 }

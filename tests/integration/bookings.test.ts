@@ -209,12 +209,12 @@ describe('GET /booking', () => {
   });
 
   describe('WHEN token is valid', () => {
-    it('should return with status 403 WHEN user has not bookings', async () => {
+    it('should return with status 404 WHEN user has not bookings', async () => {
       const user = await createUser();
       const token = await generateValidToken(user);
 
       const response = await server.get('/booking').set('Authorization', `Bearer ${token}`);
-      expect(response.status).toBe(httpStatus.FORBIDDEN);
+      expect(response.status).toBe(httpStatus.NOT_FOUND);
     });
 
     it('should return with status 200 WHEN user has bookings', async () => {
