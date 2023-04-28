@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">85.71% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>6/7</span>
+                <span class='fraction'>7/7</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">75% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>3/4</span>
+                <span class='fraction'>4/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">85.71% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>6/7</span>
+                <span class='fraction'>7/7</span>
             </div>
         
             
@@ -115,8 +115,12 @@
 <a name='L50'></a><a href='#L50'>50</a>
 <a name='L51'></a><a href='#L51'>51</a>
 <a name='L52'></a><a href='#L52'>52</a>
-<a name='L53'></a><a href='#L53'>53</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">10x</span>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
@@ -128,7 +132,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">19x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -138,10 +146,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">27x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -158,15 +163,18 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Enrollment } from '@prisma/client';
 import { prisma } from '@/config';
 &nbsp;
@@ -179,18 +187,12 @@ async function findWithAddressByUserId(userId: number) {
   });
 }
 &nbsp;
-async function getEnrollmentByUserId(userId: number) {
-  return prisma.enrollment.findFirst({
-    where: { userId },
-  });
-}
-&nbsp;
-async function <span class="fstat-no" title="function not covered" >upsert(</span>
+async function upsert(
   userId: number,
   createdEnrollment: CreateEnrollmentParams,
   updatedEnrollment: UpdateEnrollmentParams,
 ) {
-<span class="cstat-no" title="statement not covered" >  return prisma.enrollment.upsert({</span>
+  return prisma.enrollment.upsert({
     where: {
       userId,
     },
@@ -199,23 +201,33 @@ async function <span class="fstat-no" title="function not covered" >upsert(</spa
   });
 }
 &nbsp;
-export type CreateEnrollmentParams = Omit&lt;Enrollment, 'id' | 'createdAt' | 'updatedAt'&gt;;
-export type UpdateEnrollmentParams = Omit&lt;CreateEnrollmentParams, 'userId'&gt;;
-&nbsp;
-&nbsp;
-async function getEnrollmentById(id: number) {
-  return prisma.enrollment.findFirst({
-    where: { id },
+async function getIdEnrollmentByUserId(userId: number) {
+  return await prisma.enrollment.findUnique({
+    where: {
+      userId,
+    },
+    select: {
+      id: true,
+    },
   });
 }
 &nbsp;
+async function getEnrollmentById(id: number) {
+  return await prisma.enrollment.findUnique({
+    where: {
+      id,
+    },
+  });
+}
+&nbsp;
+export type CreateEnrollmentParams = Omit&lt;Enrollment, 'id' | 'createdAt' | 'updatedAt'&gt;;
+export type UpdateEnrollmentParams = Omit&lt;CreateEnrollmentParams, 'userId'&gt;;
 &nbsp;
 const enrollmentRepository = {
   findWithAddressByUserId,
   upsert,
-  getEnrollmentByUserId,
+  getIdEnrollmentByUserId,
   getEnrollmentById,
-&nbsp;
 };
 &nbsp;
 export default enrollmentRepository;
@@ -226,7 +238,7 @@ export default enrollmentRepository;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Fri Apr 28 2023 14:08:05 GMT-0300 (Horário Padrão de Brasília)
+                at Fri Apr 28 2023 16:31:17 GMT-0300 (Horário Padrão de Brasília)
             </div>
         <script src="../../../prettify.js"></script>
         <script>

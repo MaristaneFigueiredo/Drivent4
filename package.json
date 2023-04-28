@@ -13,17 +13,18 @@
     "lint": "eslint .",
     "lint:staged": "lint-staged",
     "test": "cross-env NODE_ENV=test jest --passWithNoTests --runInBand",
-    "test:coverage": "cross-env NODE_ENV=test jest --passWithNoTests --runInBand --coverage --collectCoverageFrom='./src/**'",
+    "test:coverage": "cross-env NODE_ENV=test jest --passWithNoTests --runInBand --coverage",
     "test:migration:run": "npm run test:load-envs prisma migrate deploy",
     "test:migration:generate": "npm run test:load-envs prisma migrate dev",
-    "test:watch": "cross-env NODE_ENV=test jest --watch --passWithNoTests --runInBand",
+    "test:watch": "jest --watch --passWithNoTests --runInBand",
     "test:load-envs": "dotenv -e .env.test",
     "test:seed": "npm run test:load-envs prisma db seed",
     "dev:load-envs": "dotenv -e .env.development",
     "dev:migration:run": "npm run dev:load-envs prisma migrate deploy",
     "dev:migration:generate": "npm run dev:load-envs prisma migrate dev",
     "dev:seed": "npm run dev:load-envs prisma db seed",
-    "dev": "cross-env NODE_ENV=development nodemon --watch 'src/' --exec 'ts-node -r tsconfig-paths/register ./src/server.ts' -e ts"
+    "dev": "cross-env NODE_ENV=development nodemon --watch 'src/' --exec 'ts-node -r tsconfig-paths/register ./src/server.ts' -e ts",
+    "run:test": "cross-env NODE_ENV=test nodemon --watch 'src/' --exec 'ts-node -r tsconfig-paths/register ./src/server.ts' -e ts"
   },
   "keywords": [
     "driven.t",
@@ -85,7 +86,7 @@
     "dotenv-expand": "^8.0.3",
     "express": "^4.18.1",
     "express-async-errors": "^3.1.1",
-    "http-status": "^1.5.2",
+    "http-status": "^1.6.2",
     "joi": "^17.6.0",
     "jsonwebtoken": "^8.5.1",
     "reflect-metadata": "^0.1.13"

@@ -72,32 +72,18 @@ function getAddressForUpsert(address: CreateAddressParams) {
   };
 }
 
+async function getEnrollmentByUserId(userId: number) {
+  const enrollment = await enrollmentRepository.getIdEnrollmentByUserId(userId);
+  return enrollment;
+}
+
+async function getEnrollmentById(enrollmentId: number) {
+  return await enrollmentRepository.getEnrollmentById(enrollmentId);
+}
+
 export type CreateOrUpdateEnrollmentWithAddress = CreateEnrollmentParams & {
   address: CreateAddressParams;
 };
-
-async function getEnrollmentByUserId(userId: number): Promise<Enrollment> {
-  
-  const enrollment = await enrollmentRepository.getEnrollmentByUserId(userId);
-  
-  if (!enrollment) {  
-    throw notFoundError;
-  }
-  
-
-  return enrollment;
-}
-
-async function getEnrollmentById(id: number): Promise<Enrollment> {
-  const enrollment = await enrollmentRepository.getEnrollmentById(id);
-
-  if (!enrollment) {
-    throw notFoundError;
-  }
-
-  return enrollment;
-}
-
 
 const enrollmentsService = {
   getOneWithAddressByUserId,
@@ -105,8 +91,6 @@ const enrollmentsService = {
   getAddressFromCEP,
   getEnrollmentByUserId,
   getEnrollmentById,
- 
-
 };
 
 export default enrollmentsService;

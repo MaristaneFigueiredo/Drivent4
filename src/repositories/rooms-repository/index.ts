@@ -1,4 +1,4 @@
-//import { Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { prisma } from '@/config';
 
 async function getRoomById(roomId: number) {

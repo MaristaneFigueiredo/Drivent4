@@ -30,16 +30,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">66.66% </span>
+                <span class="strong">85.71% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>2/3</span>
+                <span class='fraction'>6/7</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>4/4</span>
+                <span class='fraction'>3/3</span>
             </div>
         
             
@@ -118,26 +118,14 @@
 <a name='L53'></a><a href='#L53'>53</a>
 <a name='L54'></a><a href='#L54'>54</a>
 <a name='L55'></a><a href='#L55'>55</a>
-<a name='L56'></a><a href='#L56'>56</a>
-<a name='L57'></a><a href='#L57'>57</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">10x</span>
-<span class="cline-any cline-yes">10x</span>
-<span class="cline-any cline-yes">10x</span>
-<span class="cline-any cline-yes">10x</span>
+<a name='L56'></a><a href='#L56'>56</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -150,42 +138,51 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">10x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Hotel } from '@prisma/client';
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { TicketStatus } from '@prisma/client';
+import ticketsService from '../tickets-service';
+import { paymentNotFound } from '../payments-service/errors';
+import hotelsRepository from '@/repositories/hotels-repository';
 import { notFoundError } from '@/errors';
-import hotelRepository from '@/repositories/hotel-repository';
-import enrollmentsService from '@/services/enrollments-service';
-import ticketsService from '@/services/tickets-service';
-import ticketRepository from '@/repositories/ticket-repository';
 &nbsp;
-async function getHotels(userId: number): Promise&lt;Hotel[]&gt; {
-  await checkEnrollmentAndDataTicketByUser(userId);
+async function getAll(userId: number) {
+  await verifyUserTickets(userId);
 &nbsp;
-  const hotels = await hotelRepository.getHotels();
+  const hotels = await hotelsRepository.getAll();
 &nbsp;
   if (hotels.length === 0) {
     throw notFoundError;
@@ -194,42 +191,42 @@ async function getHotels(userId: number): Promise&lt;Hotel[]&gt; {
   return hotels;
 }
 &nbsp;
-async function getHotelById(hotelId: number) {
-  const hotel = await hotelRepository.getHotelById(hotelId);
-&nbsp;
+async function getHotelById(hotelId: number, userId: number) {
+  await verifyUserTickets(userId);
+  const hotel = await hotelsRepository.getHotelById(hotelId);
   if (!hotel) {
     throw notFoundError;
   }
-&nbsp;
   return hotel;
 }
 &nbsp;
-async function getRoomsHotel(userId: number, hotelId: number) {
-  await checkEnrollmentAndDataTicketByUser(userId);
+async function verifyUserTickets(userId: number) {
+  const allUserTickets = await ticketsService.getAllUserTickets(userId);
 &nbsp;
-  await getHotelById(hotelId);
-&nbsp;
-  const roomsHotels = await hotelRepository.getRoomsHotel(hotelId);
-&nbsp;
-  <span class="missing-if-branch" title="if path not taken" >I</span>if (!roomsHotels) {
+  <span class="missing-if-branch" title="if path not taken" >I</span>if (!allUserTickets) {
 <span class="cstat-no" title="statement not covered" >    throw notFoundError;</span>
   }
-  return roomsHotels;
-}
 &nbsp;
-export async function checkEnrollmentAndDataTicketByUser(userId: number) {
-  // existe enrollment
-  const enrollment = await enrollmentsService.getEnrollmentByUserId(userId);
+  // const paidTickets = allUserTickets.filter((t) =&gt; t.status === TicketStatus.PAID &amp;&amp; t.TicketType.isRemote === false);
+  // const isAnyNotRemoteAndIncludesHotel = paidTickets.filter(
+  //   (t) =&gt; !t.TicketType.isRemote &amp;&amp; t.TicketType.includesHotel,
+  // );
+  const isTicketPaidNotRemoteAndHotelIncluded =
+    allUserTickets.status === TicketStatus.PAID &amp;&amp;
+    allUserTickets.TicketType.isRemote === false &amp;&amp;
+    allUserTickets.TicketType.includesHotel;
 &nbsp;
-  const dataTicket = await ticketsService.checkTiketsByUser(enrollment.id);
+  if (!isTicketPaidNotRemoteAndHotelIncluded) {
+    throw paymentNotFound;
+  }
+&nbsp;
+  return;
 }
 &nbsp;
 const hotelsService = {
-  getHotels,
-  getRoomsHotel,
-  checkEnrollmentAndDataTicketByUser,
+  getAll,
+  getHotelById,
 };
-&nbsp;
 export default hotelsService;
 &nbsp;</pre></td></tr></table></pre>
 
@@ -238,7 +235,7 @@ export default hotelsService;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Fri Apr 28 2023 14:08:05 GMT-0300 (Horário Padrão de Brasília)
+                at Fri Apr 28 2023 16:31:17 GMT-0300 (Horário Padrão de Brasília)
             </div>
         <script src="../../../prettify.js"></script>
         <script>

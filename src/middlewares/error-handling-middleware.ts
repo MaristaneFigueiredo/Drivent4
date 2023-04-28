@@ -1,13 +1,8 @@
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import httpStatus from 'http-status';
 import { ApplicationError } from '@/protocols';
 
-export function handleApplicationErrors(
-  err: ApplicationError | Error,
-  _req: Request,
-  res: Response,
-  _next: NextFunction,
-) {
+export function handleApplicationErrors(err: ApplicationError | Error, _req: Request, res: Response) {
   if (err.name === 'CannotEnrollBeforeStartDateError') {
     return res.status(httpStatus.BAD_REQUEST).send({
       message: err.message,
@@ -34,13 +29,8 @@ export function handleApplicationErrors(
 
   if (err.name === 'NotFoundError') {
     return res.status(httpStatus.NOT_FOUND).send({
-      //  return res.status(httpStatus.NO_CONTENT).send({
       message: err.message,
     });
-  }
-
-  if (err.name === 'BadRequestError') {
-    return res.status(httpStatus.BAD_REQUEST);
   }
 
   /* eslint-disable-next-line no-console */

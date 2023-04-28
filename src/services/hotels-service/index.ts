@@ -1,14 +1,13 @@
-import { Hotel } from '@prisma/client';
+import { TicketStatus } from '@prisma/client';
+import ticketsService from '../tickets-service';
+import { paymentNotFound } from '../payments-service/errors';
+import hotelsRepository from '@/repositories/hotels-repository';
 import { notFoundError } from '@/errors';
-import hotelRepository from '@/repositories/hotel-repository';
-import enrollmentsService from '@/services/enrollments-service';
-import ticketsService from '@/services/tickets-service';
-import ticketRepository from '@/repositories/ticket-repository';
 
-async function getHotels(userId: number): Promise<Hotel[]> {
-  await checkEnrollmentAndDataTicketByUser(userId);
+async function getAll(userId: number) {
+  await verifyUserTickets(userId);
 
-  const hotels = await hotelRepository.getHotels();
+  const hotels = await hotelsRepository.getAll();
 
   if (hotels.length === 0) {
     throw notFoundError;
@@ -17,40 +16,40 @@ async function getHotels(userId: number): Promise<Hotel[]> {
   return hotels;
 }
 
-async function getHotelById(hotelId: number) {
-  const hotel = await hotelRepository.getHotelById(hotelId);
-
+async function getHotelById(hotelId: number, userId: number) {
+  await verifyUserTickets(userId);
+  const hotel = await hotelsRepository.getHotelById(hotelId);
   if (!hotel) {
     throw notFoundError;
   }
-
   return hotel;
 }
 
-async function getRoomsHotel(userId: number, hotelId: number) {
-  await checkEnrollmentAndDataTicketByUser(userId);
+async function verifyUserTickets(userId: number) {
+  const allUserTickets = await ticketsService.getAllUserTickets(userId);
 
-  await getHotelById(hotelId);
-
-  const roomsHotels = await hotelRepository.getRoomsHotel(hotelId);
-
-  if (!roomsHotels) {
+  if (!allUserTickets) {
     throw notFoundError;
   }
-  return roomsHotels;
-}
 
-export async function checkEnrollmentAndDataTicketByUser(userId: number) {
-  // existe enrollment
-  const enrollment = await enrollmentsService.getEnrollmentByUserId(userId);
+  // const paidTickets = allUserTickets.filter((t) => t.status === TicketStatus.PAID && t.TicketType.isRemote === false);
+  // const isAnyNotRemoteAndIncludesHotel = paidTickets.filter(
+  //   (t) => !t.TicketType.isRemote && t.TicketType.includesHotel,
+  // );
+  const isTicketPaidNotRemoteAndHotelIncluded =
+    allUserTickets.status === TicketStatus.PAID &&
+    allUserTickets.TicketType.isRemote === false &&
+    allUserTickets.TicketType.includesHotel;
 
-  const dataTicket = await ticketsService.checkTiketsByUser(enrollment.id);
+  if (!isTicketPaidNotRemoteAndHotelIncluded) {
+    throw paymentNotFound;
+  }
+
+  return;
 }
 
 const hotelsService = {
-  getHotels,
-  getRoomsHotel,
-  checkEnrollmentAndDataTicketByUser,
+  getAll,
+  getHotelById,
 };
-
 export default hotelsService;

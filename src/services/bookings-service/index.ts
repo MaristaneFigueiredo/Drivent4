@@ -1,71 +1,51 @@
-import { notFoundError, forbiddenError } from '@/errors';
-import hotelsService, { checkEnrollmentAndDataTicketByUser } from '@/services/hotels-service';
-import bookingRepository from '@/repositories/bookings-repository';
-import hotelRepository from '@/repositories/hotel-repository';
-import { BookingInput } from '@/protocols';
-import { Room, Booking } from '@prisma/client';
-import { check } from 'prettier';
-import ticketsService from '@/services/tickets-service';
+import { TicketStatus } from '@prisma/client';
+import ticketsService from '../tickets-service';
 import roomsService from '../rooms-service';
+import bookingRepository, { BookingCreateInput } from '@/repositories/booking-repository';
+import { Forbidden } from '@/errors/forbidden-error';
+import { notFoundError } from '@/errors';
 
-export type BookingBodyInput = Pick<BookingInput, 'roomId'>;
+export type BookingBodyInput = Pick<BookingCreateInput, 'roomId'>;
+
+async function createBooking(roomId: number, userId: number) {
+  await validateTicketsForBookingBusinessRules(roomId, userId);
+  await validateRoomBusinessRules(roomId);
+  const booking = {
+    roomId,
+    userId,
+  } as BookingCreateInput;
+  return await bookingRepository.createBooking(booking);
+}
 
 async function getBooking(userId: number) {
   const booking = await bookingRepository.getBooking(userId);
 
   if (!booking) {
-    throw notFoundError;
+    throw Forbidden;
   }
   return booking;
 }
 
-//async function createBooking({ userId, roomId }: BookingInput) {
-  async function createBooking(userId: number, roomId: number): Promise<Booking> {
-  //validar dados do ticket do usuário
-  await ticketsService.checkTicket(userId);
+async function validateTicketsForBookingBusinessRules(roomId: number, userId: number) {
+  const userTicket = await ticketsService.getAllUserTickets(userId);
+  const userTicketType = await ticketsService.getTicketTypeById(userTicket.ticketTypeId);
+  const isTicketNotRemote = userTicketType.isRemote === false;
+  const isHotelIncluded = userTicketType.includesHotel;
+  const isTicketPaid = userTicket.status === TicketStatus.PAID;
+  const canUserMakeABooking = isTicketNotRemote && isHotelIncluded && isTicketPaid;
 
-  //existe quarto
-  const room = await getRoomById(roomId);
+  if (!canUserMakeABooking) {
+    throw Forbidden;
+  }
 
-  // existe vaga no quarto
-  //await verifyCapacityRoom(room.capacity, roomId);
-  await verifyCapacityRoom(room.capacity, roomId, room.hotelId);
-
-  //apenas usuário com ingresso do tipo presencial, com hospedagem e pago
-  // await hotelsService.checkEnrollmentAndDataTicketByUser(userId);
-
-  return await bookingRepository.createBooking({ userId, roomId });
+  return;
 }
-
-async function getRoomById(roomId: number): Promise<Room> {
-  const room = await hotelRepository.getRoomById(roomId);
-
-  if (!room) throw notFoundError;
-
-  return room;
-}
-
-async function verifyCapacityRoom(capacity: number, roomId: number, hotelId: number): Promise<number> {
-  //   console.log('booking service hotelId', hotelId); //68
-  //   console.log('booking service capacity', capacity); //1
-  //   console.log('booking service roomId', roomId); //50
-
-  const qtdeBookingRoom = await bookingRepository.getCountBookingRoom(roomId);
-
-  //   console.log('booking service capacity', capacity); //1
-  //   console.log('booking service qtdeBookingRoom', qtdeBookingRoom); //1
-
-  if (qtdeBookingRoom === capacity) throw forbiddenError;
-
-  return qtdeBookingRoom;
-}
-
 
 async function validateBookingIdExists(bookingId: number) {
   const booking = await bookingRepository.getBookingById(bookingId);
 
   if (!booking) {
-    throw notFoundError;
+    throw Forbidden;
   }
   return;
 }
@@ -75,7 +55,7 @@ async function validateBookingBelongsToUser(bookingId: number, userId: number) {
   const bookingBelongsToUser = booking.userId === userId;
 
   if (!bookingBelongsToUser) {
-    throw forbiddenError;
+    throw Forbidden;
   }
 }
 
@@ -88,11 +68,10 @@ async function validateRoomBusinessRules(roomId: number) {
   const vacancies = await roomsService.getNumberOfRoomVacancies(roomId);
 
   if (!(vacancies > 0)) {
-    throw forbiddenError;
+    throw Forbidden;
   }
   return;
 }
-
 
 async function getNumberOfRoomBooking(roomId: number) {
   const bookings = await bookingRepository.getNumberOfRoomBooking(roomId);
@@ -103,18 +82,17 @@ async function getNumberOfRoomBooking(roomId: number) {
   return bookings;
 }
 
-
-async function changeBooking(bookingId: number, roomId: number, userId: number) {
+async function updateBooking(bookingId: number, roomId: number, userId: number) {
   await validateBookingIdExists(bookingId);
   await validateBookingBelongsToUser(bookingId, userId);
   await validateRoomBusinessRules(roomId);
 
-  return await bookingRepository.changeBooking(bookingId, roomId);
+  return await bookingRepository.updateBooking(bookingId, roomId);
 }
 
 export default {
-  getBooking,
   createBooking,
-  changeBooking,
-  getNumberOfRoomBooking
+  getNumberOfRoomBooking,
+  getBooking,
+  updateBooking,
 };

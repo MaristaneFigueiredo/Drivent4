@@ -33,6 +33,16 @@ export async function createPaidTicket(enrollmentId: number, ticketTypeId: numbe
   });
 }
 
+export async function createReservedTicket(enrollmentId: number, ticketTypeId: number) {
+  return prisma.ticket.create({
+    data: {
+      enrollmentId,
+      ticketTypeId,
+      status: TicketStatus.RESERVED,
+    },
+  });
+}
+
 export async function createRemoteTicketType() {
   return prisma.ticketType.create({
     data: {
@@ -63,5 +73,5 @@ export async function createIncludedHotelTicketType() {
       isRemote: false,
       includesHotel: true,
     },
-  })
+  });
 }

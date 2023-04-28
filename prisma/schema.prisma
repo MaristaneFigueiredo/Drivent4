@@ -124,9 +124,9 @@ model Room {
   capacity  Int
   hotelId   Int
   Hotel     Hotel     @relation(fields: [hotelId], references: [id])
+  Booking   Booking[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-  Booking   Booking[]
 }
 
 model Booking {
